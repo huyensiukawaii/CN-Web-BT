@@ -66,6 +66,23 @@ addProductForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  // Kiểm tra URL hợp lệ
+  try {
+    new URL(imageUrl);
+  } catch (err) {
+    formMessage.textContent = '⚠️ Link ảnh không hợp lệ. Vui lòng nhập URL đúng định dạng';
+    formMessage.style.color = '#ff5e91';
+    return;
+  }
+
+  // Kiểm tra giá có hợp lệ không
+  const priceNum = parseInt(price);
+  if (isNaN(priceNum) || priceNum <= 0) {
+    formMessage.textContent = '⚠️ Giá phải là số dương';
+    formMessage.style.color = '#ff5e91';
+    return;
+  }
+
   // Hiển thị trạng thái "đang xử lý"
   formMessage.textContent = '⏳ Đang thêm sản phẩm...';
   formMessage.style.color = '#6c7a89';
@@ -80,11 +97,20 @@ addProductForm.addEventListener('submit', async (e) => {
     newArticle.classList.add('product-item');
     newArticle.setAttribute('data-name', name.toLowerCase());
     
-    // Tạo giá tiền định dạng (thêm .000)
-    const formattedPrice = parseInt(price).toLocaleString('vi-VN');
+    // Tạo giá tiền định dạng
+    const formattedPrice = priceNum.toLocaleString('vi-VN');
+    
+    // Tạo ảnh với fallback handler
+    const imgHTML = `
+      <img 
+        src="${imageUrl}" 
+        alt="${name}"
+        onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+      />
+    `;
     
     newArticle.innerHTML = `
-      <img src="${imageUrl}" alt="${name}"/>
+      ${imgHTML}
       <h3 class="product-name">${name}</h3>
       <p>${desc}</p>
       <p class="price">${formattedPrice}₫</p>

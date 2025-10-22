@@ -1,6 +1,94 @@
-// ========== BÀI 3: JAVASCRIPT - DOM & EVENTS ==========
+// ========== BÀI 5: LOCALSTORAGE - LƯU TRỮ DỮ LIỆU ==========
 
-// 1. SEARCH & FILTER PRODUCTS
+// ===== QUẢN LÝ LOCALSTORAGE =====
+
+// Danh sách sản phẩm mặc định ban đầu
+const DEFAULT_PRODUCTS = [
+  {
+    name: 'Son lì Bloom Velvet',
+    desc: 'Son lì lâu trôi, dưỡng môi mềm mượt, màu sắc tươi tắn phù hợp nhiều tone da.',
+    price: 220000,
+    image: 'https://picsum.photos/seed/cos1/400/300'
+  },
+  {
+    name: 'Tinh chất dưỡng Bloom Radiance Serum',
+    desc: 'Serum cô đặc vitamin C giúp da sáng mịn, giảm thâm nám và tăng đàn hồi.',
+    price: 360000,
+    image: 'https://picsum.photos/seed/cos2/400/300'
+  },
+  {
+    name: 'Kem dưỡng ẩm Bloom Daily Moisturizer',
+    desc: 'Kem dưỡng nhẹ, không nhờn rít, cấp ẩm sâu và bảo vệ da khỏi mất nước.',
+    price: 280000,
+    image: 'https://picsum.photos/seed/cos3/400/300'
+  }
+];
+
+// Hàm lấy danh sách sản phẩm từ localStorage
+function getProducts() {
+  const stored = localStorage.getItem('products');
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Hàm lưu danh sách sản phẩm vào localStorage
+function saveProducts(products) {
+  localStorage.setItem('products', JSON.stringify(products));
+  console.log('✅ Đã lưu sản phẩm vào localStorage:', products);
+}
+
+// Hàm khởi tạo sản phẩm lần đầu (nếu localStorage rỗng)
+function initProducts() {
+  const stored = localStorage.getItem('products');
+  if (!stored) {
+    // Nếu chưa có dữ liệu, lưu sản phẩm mặc định
+    saveProducts(DEFAULT_PRODUCTS);
+    console.log('✅ Khởi tạo sản phẩm mặc định');
+  }
+}
+
+// ===== RENDER SẢN PHẨM TỪ LOCALSTORAGE =====
+
+const productsContainer = document.querySelector('.products');
+
+// Hàm render danh sách sản phẩm từ mảy
+function renderProducts(products = null) {
+  // Nếu không truyền products, lấy từ localStorage
+  if (!products) {
+    products = getProducts();
+  }
+
+  // Xóa các sản phẩm cũ (giữ lại form nếu có)
+  const existingProducts = productsContainer.querySelectorAll('.product-item');
+  existingProducts.forEach(item => item.remove());
+
+  // Tạo phần tử cho mỗi sản phẩm
+  products.forEach(product => {
+    const article = document.createElement('article');
+    article.classList.add('product-item');
+    article.setAttribute('data-name', product.name.toLowerCase());
+
+    // Định dạng giá
+    const formattedPrice = product.price.toLocaleString('vi-VN');
+
+    article.innerHTML = `
+      <img 
+        src="${product.image}" 
+        alt="${product.name}"
+        onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+      />
+      <h3 class="product-name">${product.name}</h3>
+      <p>${product.desc}</p>
+      <p class="price">${formattedPrice}₫</p>
+    `;
+
+    productsContainer.appendChild(article);
+  });
+
+  console.log(`✅ Đã render ${products.length} sản phẩm`);
+}
+
+// ===== SEARCH & FILTER PRODUCTS =====
+
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 
@@ -27,7 +115,8 @@ searchBtn.addEventListener('click', filterProducts);
 // Gắn sự kiện cho ô nhập tìm kiếm (keyup để tìm kiếm real-time)
 searchInput.addEventListener('keyup', filterProducts);
 
-// 2. TOGGLE "ADD PRODUCT" FORM
+// ===== TOGGLE "ADD PRODUCT" FORM =====
+
 const addProductBtn = document.getElementById('addProductBtn');
 const addProductForm = document.getElementById('addProductForm');
 const cancelAddBtn = document.getElementById('cancelAddBtn');
@@ -44,13 +133,13 @@ addProductBtn.addEventListener('click', toggleAddProductForm);
 // Gắn sự kiện click cho nút "Hủy"
 cancelAddBtn.addEventListener('click', toggleAddProductForm);
 
-// 3. XỬ LÝ FORM THÊM SẢN PHẨM
+// ===== XỬ LÝ FORM THÊM SẢN PHẨM =====
+
 const newProductName = document.getElementById('newProductName');
 const newProductDesc = document.getElementById('newProductDesc');
 const newProductPrice = document.getElementById('newProductPrice');
 const newProductImage = document.getElementById('newProductImage');
 const formMessage = document.getElementById('formMessage');
-const productsContainer = document.querySelector('.products');
 
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(name, desc, price, imageUrl) {
@@ -126,27 +215,28 @@ addProductForm.addEventListener('submit', async (e) => {
   formMessage.style.color = '#6c7a89';
 
   try {
-    // Mô phỏng request async/await (giống như gửi lên server)
+    // Mô phỏng request async/await
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // Thêm sản phẩm mới vào đầu danh sách
-    const newArticle = document.createElement('article');
-    newArticle.classList.add('product-item');
-    newArticle.setAttribute('data-name', name.toLowerCase());
-    
-    // Tạo giá tiền định dạng (thêm .000 nếu cần)
-    const priceNum = parseInt(price);
-    const formattedPrice = priceNum.toLocaleString('vi-VN');
-    
-    newArticle.innerHTML = `
-      <img src="${imageUrl}" alt="${name}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"/>
-      <h3 class="product-name">${name}</h3>
-      <p>${desc}</p>
-      <p class="price">${formattedPrice}₫</p>
-    `;
+    // Tạo đối tượng sản phẩm mới
+    const newProduct = {
+      name: name,
+      desc: desc,
+      price: parseInt(price),
+      image: imageUrl
+    };
 
-    // Thêm vào đầu danh sách (prepend)
-    productsContainer.prepend(newArticle);
+    // Lấy danh sách sản phẩm hiện tại từ localStorage
+    const products = getProducts();
+
+    // Thêm sản phẩm mới vào đầu danh sách
+    products.unshift(newProduct);
+
+    // Lưu danh sách cập nhật vào localStorage
+    saveProducts(products);
+
+    // Render lại danh sách sản phẩm trên giao diện
+    renderProducts(products);
 
     // Hiển thị thông báo thành công
     formMessage.textContent = '✅ Thêm sản phẩm thành công!';
@@ -169,7 +259,8 @@ addProductForm.addEventListener('submit', async (e) => {
   }
 });
 
-// 4. XỬ LÝ FORM LIÊN HỆ (async/await)
+// ===== XỬ LÝ FORM LIÊN HỆ =====
+
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -202,4 +293,17 @@ if (contactForm) {
   });
 }
 
-console.log('✅ Script.js loaded successfully - Search, Filter, Add Product, Contact Form ready!');
+// ===== KHỞI TẠO TRANG =====
+
+// Khi trang load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('📄 Trang đã load');
+  
+  // Khởi tạo sản phẩm (nếu localStorage rỗng)
+  initProducts();
+  
+  // Render sản phẩm từ localStorage
+  renderProducts();
+  
+  console.log('✅ Script.js loaded successfully - LocalStorage ready!');
+});

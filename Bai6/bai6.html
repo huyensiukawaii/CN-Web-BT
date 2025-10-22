@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Cửa hàng Mỹ phẩm Bloom</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+	<header>
+		<div class="container">
+			<div>
+				<h1>Cửa hàng Mỹ phẩm Bloom</h1>
+				<div class="small">Đẹp tự nhiên - An toàn cho da - Giao hàng nhanh</div>
+			</div>
+			<nav aria-label="Chính">
+				<a href="#">Trang chủ</a>
+				<a href="#products">Sản phẩm</a>
+				<a href="#contact">Liên hệ</a>
+			</nav>
+		</div>
+	</header>
+
+		<main>
+			<div class="container">
+				<section class="hero" aria-labelledby="about-title">
+					<h2 id="about-title">Giới thiệu</h2>
+					<p>Bloom chuyên cung cấp sản phẩm mỹ phẩm lành tính: chăm sóc da, trang điểm nhẹ nhàng và dưỡng ẩm. Sản phẩm phù hợp cho mọi loại da, kiểm nghiệm an toàn và giao tận nơi.</p>
+				</section>
+			</div>
+
+			<div class="container">
+				<section id="products" aria-labelledby="products-title">
+				<div class="section-header">
+					<h2 id="products-title">Sản phẩm nổi bật</h2>
+					<div class="product-counter">
+						<span id="productCount">0</span> sản phẩm
+					</div>
+				</div>
+				
+				<!-- Search & Add Product Controls -->
+				<div class="product-controls">
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+						<button id="searchBtn">🔍 Tìm</button>
+					</div>
+					<select id="sortDropdown" class="sort-dropdown">
+						<option value="default">📌 Mặc định</option>
+						<option value="price-asc">💰 Giá: Thấp → Cao</option>
+						<option value="price-desc">💸 Giá: Cao → Thấp</option>
+						<option value="name-asc">🔤 Tên: A → Z</option>
+					</select>
+					<button id="addProductBtn" class="btn-add">➕ Thêm sản phẩm</button>
+				</div>
+				
+				<!-- Add Product Form (Hidden by default) -->
+				<form id="addProductForm" class="form-hidden">
+					<h3>Thêm sản phẩm mới</h3>
+					<div>
+						<label for="newProductName">Tên sản phẩm</label>
+						<input id="newProductName" type="text" placeholder="Nhập tên sản phẩm" required>
+					</div>
+					<div>
+						<label for="newProductDesc">Mô tả</label>
+						<textarea id="newProductDesc" placeholder="Nhập mô tả sản phẩm" rows="3" required></textarea>
+					</div>
+					<div>
+						<label for="newProductPrice">Giá (₫)</label>
+						<input id="newProductPrice" type="number" placeholder="Nhập giá sản phẩm" required>
+					</div>
+					<div>
+						<label for="newProductImage">Link ảnh sản phẩm</label>
+						<input id="newProductImage" type="url" placeholder="https://example.com/image.jpg" required>
+					</div>
+					<div>
+						<button type="submit" class="btn-submit">Thêm sản phẩm</button>
+						<button type="button" id="cancelAddBtn" class="btn-cancel">Hủy</button>
+					</div>
+					<div id="formMessage" class="form-message"></div>
+				</form>
+				
+				<div class="products">
+				</div>
+				</section>
+			</div>
+
+			<div class="container">
+				<section id="contact" aria-labelledby="contact-title">
+				<h2 id="contact-title">Liên hệ / Đăng ký nhận tin</h2>
+				<form id="contactForm">
+					<div>
+						<label for="name">Họ và tên</label><br>
+						<input id="name" name="name" type="text" required placeholder="Nguyễn Văn A">
+					</div>
+					<div>
+						<label for="email">Email</label><br>
+						<input id="email" name="email" type="email" required placeholder="email@example.com">
+					</div>
+					<div>
+						<label for="message">Nội dung</label><br>
+						<textarea id="message" name="message" rows="4" required placeholder="Nhập tin nhắn của bạn..."></textarea>
+					</div>
+					<div>
+						<button type="submit">Gửi</button>
+					</div>
+					<div id="formStatus" class="small" aria-live="polite"></div>
+				</form>
+				</section>
+			</div>
+		</main>
+
+		<footer>
+			<div class="container">
+				<div>&copy; 2025 Cửa hàng Mỹ phẩm Bloom</div>
+				<div class="small">Địa chỉ: 45 Phố Làm Đẹp, Quận Thảo Mộc</div>
+			</div>
+		</footer>
+	</body>
+	<script src="script.js"></script>
+
+</html>
