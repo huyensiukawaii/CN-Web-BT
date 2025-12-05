@@ -29,6 +29,46 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
+// API POST thêm học sinh mới
+app.post('/api/students', async (req, res) => {
+  try {
+    const newStudent = await Student.create(req.body);
+    res.status(201).json(newStudent);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// API PUT cập nhật thông tin học sinh
+app.put('/api/students/:id', async (req, res) => {
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updatedStudent) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json(updatedStudent);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// API DELETE xóa học sinh
+app.delete('/api/students/:id', async (req, res) => {
+  try {
+    const deletedStudent = await Student.findByIdAndDelete(req.params.id);
+    if (!deletedStudent) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json({ message: "Student deleted successfully", student: deletedStudent });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // Khởi động server
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại http://localhost:${PORT}`);
